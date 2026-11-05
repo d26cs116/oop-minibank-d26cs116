@@ -1,0 +1,61 @@
+package student.app;
+
+import java.io.File;
+import java.io.IOException;
+import student.model.Student;
+import student.service.StudentService;
+
+// Main application class inside student.app package pa ckaged into runnable JAR
+public class StudentAppMain {
+    public static void main(String[] args) {
+        System.out.println("=================================================");
+        System.out.println("   STUDENT MANAGEMENT SYSTEM (RUNNABLE JAR DEMO) ");
+        System.out.println("=================================================");
+        StudentService service = new StudentService();
+
+        // 1. Adding initial students
+        System.out.println("\n[1] Registering Students via Service Layer:");
+        Student s1 = new Student("D26CS127", "Niraj Patel", "CSE", 9.45);
+        Student s2 = new Student("D26CS101", "Aarav Shah", "CSE", 8.80);
+        Student s3 = new Student("D26IT205", "Diya Joshi", "IT", 9.15);
+
+        service.addStudent(s1);
+        service.addStudent(s2);
+        service.addStudent(s3);
+        System.out.println("  + Registered: " + s1);
+        System.out.println("  + Registered: " + s2);
+        System.out.println("  + Registered: " + s3);
+
+        // 2. Saving state to file
+        String dbFile = "students_packaged_db.dat";
+        System.out.println("\n[2] Saving Application State to File ('" + dbFile + "')...");
+        try {
+            service.saveData(dbFile);
+            System.out.println("  State saved successfully (" + service.getStudentCount() + " records).");
+        } catch (IOException e) {
+            System.err.println("  Failed to save state: " + e.getMessage());
+        }
+
+        // 3. Reloading state into a fresh service instance
+        System.out.println("\n[3] Restarting Session & Reloading Data from Disk...");
+        StudentService newSessionService = new StudentService();
+        try {
+            newSessionService.loadData(dbFile);
+            System.out.println("  Loaded " + newSessionService.getStudentCount() + " records successfully.");
+            System.out.println("\n[4] Active Records in Reloaded Session:");
+            for (Student s : newSessionService.getAllStudents()) {
+                System.out.println("  * " + s);
+            }
+        } catch (Exception e) {
+            System.err.println("  Failed to reload state: " + e.getMessage());
+        } finally {
+            // Clean up test database file
+            new File(dbFile).delete();
+        }
+
+        System.out.println("\n=================================================");
+        System.out.println("   JAR EXECUTION COMPLETED SUCCESSFULLY          ");
+        System.out.println("=================================================");
+    }
+}
+
