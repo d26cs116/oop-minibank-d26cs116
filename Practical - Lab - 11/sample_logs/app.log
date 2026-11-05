@@ -1,0 +1,5 @@
+[INFO] 10:00:01 Application started on port 8080
+[INFO] 10:01:23 User login request received for admin
+[ERROR] 10:02:15 Database connection timeout on pool-1
+[INFO] 10:02:40 Cache refreshed successfully
+[ERROR] 10:03:55 NullPointerException in payment gateway handler
